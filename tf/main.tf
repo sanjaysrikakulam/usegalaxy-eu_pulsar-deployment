@@ -1,18 +1,18 @@
 resource "openstack_compute_instance_v2" "central-manager" {
 
   name            = "${var.name_prefix}central-manager${var.name_suffix}"
-  flavor_name     = "${var.flavors["central-manager"]}"
-  image_id        = "${data.openstack_images_image_v2.vgcn-image.id}"
-  key_pair        = "${openstack_compute_keypair_v2.my-cloud-key.name}"
-  security_groups = "${var.secgroups_cm}"
+  flavor_name     = var.flavors["central-manager"]
+  image_id        = data.openstack_images_image_v2.vgcn-image.id
+  key_pair        = openstack_compute_keypair_v2.my-cloud-key.name
+  security_groups = var.secgroups_cm
 
   network {
-    uuid = "${data.openstack_networking_network_v2.external.id}"
+    uuid = data.openstack_networking_network_v2.external.id
   }
   network {
-    uuid = "${data.openstack_networking_network_v2.internal.id}"
+    uuid = data.openstack_networking_network_v2.internal.id
   }
-  
+
   provisioner "local-exec" {
     command = <<-EOF
       ansible-galaxy install -p ansible/roles usegalaxy_eu.htcondor
@@ -83,5 +83,7 @@ resource "openstack_compute_instance_v2" "central-manager" {
       - [ sh, -xc, "sed -i 's|nameserver 10.0.2.3||g' /etc/resolv.conf" ]
       - [ sh, -xc, "sed -i 's|localhost.localdomain|$(hostname -f)|g' /etc/telegraf/telegraf.conf" ]
       - systemctl restart telegraf
+    # authorized_keys:
+    #   - ${var.public_key.pubkey}
   EOF
 }

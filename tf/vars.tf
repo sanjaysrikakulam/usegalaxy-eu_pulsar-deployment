@@ -2,21 +2,21 @@
 // All variables in < > should be checked and personalized
 
 variable "nfs_disk_size" {
-  default = 3
+  default = 10
 }
 
 variable "flavors" {
-  type = map
+  type = map(any)
   default = {
-    "central-manager" = "<m1.medium>"
-    "nfs-server"      = "<m1.medium>"
-    "exec-node"       = "<m1.xlarge>"
-    "gpu-node"        = "<m1.small>"
+    "central-manager" = "m1.medium"
+    "nfs-server"      = "m1.medium"
+    "exec-node"       = "m1.large"
+    "gpu-node"        = "m1.small"
   }
 }
 
 variable "exec_node_count" {
-  default = 2
+  default = 1
 }
 
 variable "gpu_node_count" {
@@ -24,7 +24,7 @@ variable "gpu_node_count" {
 }
 
 variable "image" {
-  type = map
+  type = map(any)
   default = {
     "name"             = "vggp-v60-j225-1a1df01ec8f3-dev"
     "image_source_url" = "https://usegalaxy.eu/static/vgcn/vggp-v60-j225-1a1df01ec8f3-dev.raw"
@@ -35,7 +35,7 @@ variable "image" {
 }
 
 variable "gpu_image" {
-  type = map
+  type = map(any)
   default = {
     "name"             = "vggp-gpu-v60-j16-4b8cbb05c6db-dev"
     "image_source_url" = "https://usegalaxy.eu/static/vgcn/vggp-gpu-v60-j16-4b8cbb05c6db-dev.raw"
@@ -46,48 +46,48 @@ variable "gpu_image" {
 }
 
 variable "public_key" {
-  type = map
+  type = map(any)
   default = {
-    name   = "<your_VGCN_key>"
-    pubkey = "<your public key>"
+    name   = "sanjay_pulsar_test_key"
+    pubkey = "ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBACXxIeqhrxBtF8b8G3kMmmYiJVF2ZuiqkFwNrsDxdPurohwRNULB84KAN8N3AIFEXkCH5nX8rHWWu1BbS48chw02wClXK6I/CBU3/gFaxj5Zoj9AI7hwUD6Bmd1vkz2RRMKpvadPp32bcymnh7sbYfqM9nLsfGpgaLVd8gL8GDkwJgi5A== sanjay"
   }
 }
 
 variable "name_prefix" {
-  default = "<vgcn->"
+  default = "vgcn_sanjay_"
 }
 
 variable "name_suffix" {
-  default = "<.pulsar>"
+  default = ".pulsar"
 }
 
 variable "secgroups_cm" {
-  type = list
+  type = list(any)
   default = [
-    "<a-public-ssh>",
-    "<ingress-private>",
-    "<egress-public>",
+    "sanjay_public-ssh",
+    "sanjay_ingress-private",
+    "sanjay_public_egress",
   ]
 }
 
 variable "secgroups" {
-  type = list
+  type = list(any)
   default = [
-    "<ingress-private>", //Should open at least nfs, 9618 for HTCondor and 22 for ssh
-    "<egress-public>",
+    "sanjay_ingress-private", //Should open at least nfs, 9618 for HTCondor and 22 for ssh
+    "sanjay_public_egress",
   ]
 }
 
 variable "public_network" {
-  default = "<public>"
+  default = "public"
 }
 
 variable "private_network" {
-  type = map
+  type = map(any)
   default = {
-    name        = "<vgcn-private>"
-    subnet_name = "<vgcn-private-subnet>"
-    cidr4       = "<192.52.32.0/20>" //This is important to make HTCondor work
+    name        = "vgcn_sanjay_private_test_net"
+    subnet_name = "vgcn_sanjay_private_test_subnet"
+    cidr4       = "192.168.0.0/24" //This is important to make HTCondor work
   }
 }
 
